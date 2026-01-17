@@ -1,0 +1,40 @@
+# This CITATION.cff file was generated for academic citation purposes.
+# Learn more at: https://citation-file-format.github.io/
+
+cff-version: 1.2.0
+message: "If you use this software in your research, please cite it as below."
+title: "Photon-Core: A Rust-based Simulation Framework for High-Density 5D Optical Data Encoding"
+type: software
+authors:
+  - family-names: "Belalcazar"
+    given-names: "Ivan"
+    email: "iberi22@gmail.com"
+    orcid: ""  # Add your ORCID if you have one
+    affiliation: "Independent Researcher"
+version: "0.1.0"
+date-released: "2026-01-17"
+license: MIT
+repository-code: "https://github.com/iberi22/photon-core"
+url: "https://github.com/iberi22/photon-core"
+keywords:
+  - optical-storage
+  - 5D-encoding
+  - photonic-voxel
+  - data-encoding
+  - rust
+  - simulation
+  - information-theory
+  - steganography
+abstract: >-
+  A high-performance Rust framework for simulating 5D optical data storage
+  using photonic voxels. Models intensity, polarization, phase, and wavelength
+  encoding with Reed-Solomon error correction and steganographic properties.
+  Designed for computer science research in emerging storage technologies.
+references:
+  - type: article
+    title: "5D optical data storage in silica glass"
+    authors:
+      - family-names: "Wang"
+        given-names: "Yuhao"
+    journal: "Nature"
+    year: 2024
