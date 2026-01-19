@@ -1,9 +1,9 @@
 % =============================================================================
-% Photon-Core: A Rust-based Simulation Framework for 
+% Photon-Core: A Rust-based Simulation Framework for
 % High-Density 5D Optical Data Encoding
 % =============================================================================
 % arXiv Category: cs.ET (Emerging Technologies) / cs.IT (Information Theory)
-% 
+%
 % Compile with: pdflatex paper.tex
 % =============================================================================
 
@@ -93,7 +93,7 @@ The complete source code is available at: \url{https://github.com/iberi22/photon
 
 \subsection{Hardware Systems}
 
-Wang et al. \cite{wang2024} demonstrated 5D storage using self-assembled birefringent nanostructures created by femtosecond laser pulses in fused silica. Microsoft's Project Silica \cite{silica2024} achieved 7 TB capacity on a 75$\times$75$\times$2mm glass plate using similar technology.
+Wang et al. \cite{wang2024} demonstrated 5D storage using self-assembled birefringent nanostructures created by femtosecond laser pulses in fused silica. Microsoft's Project Silica \cite{silica2024} achieved 7 TB capacity on a 75$\times$75$\times$2 mm glass plate using similar technology.
 
 Zhang et al. \cite{zhang2025} proposed a deep learning approach for reconstructing birefringence parameters from intensity patterns, addressing the readout challenge in multi-layer 5D storage.
 
@@ -249,6 +249,8 @@ In practice, each dimension is decoded independently:
     b_{4:5} &= \arg\min_{i \in \{0,1,2,3\}} |\phi - i \times \frac{\pi}{2}| \\
     b_{6:7} &= \arg\min_{i \in \{0,1,2,3\}} |\lambda - \lambda_i|
 \end{align}
+
+where $\lambda_i \in \{532, 650, 450, 800\}$ nm are the discrete wavelength levels.
 
 \subsection{Noise Model}
 

@@ -458,7 +458,7 @@ If you use this software in your research, please cite:
 ```bibtex
 @software{belalcazar2026photoncore,
   author       = {Belalcazar, Ivan},
-  title        = {Photon-Core: A Rust-based Simulation Framework for 
+  title        = {Photon-Core: A Rust-based Simulation Framework for
                   High-Density 5D Optical Data Encoding},
   year         = {2026},
   publisher    = {GitHub},
@@ -503,5 +503,5 @@ cargo fmt
 
 ---
 
-**Author**: Ivan Belalcazar ([@iberi22](https://github.com/iberi22))  
+**Author**: brahyan S. Belalcazar ([@iberi22](https://github.com/iberi22))
 **Contact**: iberi22@gmail.com
