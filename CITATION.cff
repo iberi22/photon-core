@@ -8,7 +8,7 @@ type: software
 authors:
   - family-names: "Belalcazar"
     given-names: "Ivan"
-    email: "iberi22@gmail.com"
+    email: "https://github.com/iberi22"
     orcid: ""  # Add your ORCID if you have one
     affiliation: "Independent Researcher"
 version: "0.1.0"
