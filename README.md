@@ -504,4 +504,4 @@ cargo fmt
 ---
 
 **Author**: brahyan S. Belalcazar ([@iberi22](https://github.com/iberi22))
-**Contact**: iberi22@gmail.com
+**Contact**: https://github.com/iberi22
