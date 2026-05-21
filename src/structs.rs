@@ -11,7 +11,7 @@
 ///
 /// Optimized for memory alignment (16 bytes) to support SIMD operations.
 /// We use #[repr(C)] to ensure the layout corresponds to C struct layout,
-/// which with 4 f32s will be tightly packed and aligned to 4 bytes, 
+/// which with 4 f32s will be tightly packed and aligned to 4 bytes,
 /// but the overall size is 16 bytes, fitting nicely into SIMD registers.
 #[repr(C)]
 #[derive(Debug, Clone, Copy, PartialEq)]

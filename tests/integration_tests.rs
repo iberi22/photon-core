@@ -1,4 +1,4 @@
-use photon_core::{encode_data, decode_data, read_ignoring_polarization, verify_obfuscation};
+use photon_core::{decode_data, encode_data, read_ignoring_polarization, verify_obfuscation};
 
 #[test]
 fn test_round_trip_noiseless() {
@@ -7,7 +7,12 @@ fn test_round_trip_noiseless() {
     let decoded = decode_data(&voxels, false);
     // Decoded might have trailing zeros due to 3-byte chunk alignment.
     // We check that the prefix matches.
-    assert!(decoded.starts_with(data), "Noiseless round trip failed: Decoded {:?} vs Original {:?}", decoded, data);
+    assert!(
+        decoded.starts_with(data),
+        "Noiseless round trip failed: Decoded {:?} vs Original {:?}",
+        decoded,
+        data
+    );
 }
 
 #[test]
@@ -18,22 +23,31 @@ fn test_round_trip_with_noise() {
     let data = b"Testing Noise";
     let voxels = encode_data(data);
     let decoded = decode_data(&voxels, true);
-    
+
     // Check prefix
-    assert!(decoded.starts_with(data), "Noisy round trip failed: Decoded {:?} vs Original {:?}", decoded, data);
+    assert!(
+        decoded.starts_with(data),
+        "Noisy round trip failed: Decoded {:?} vs Original {:?}",
+        decoded,
+        data
+    );
 }
 
 #[test]
 fn test_steganography_effectiveness() {
     let data = b"Secret Data";
     let voxels = encode_data(data);
-    
+
     // Unauthorized read
     let stolen = read_ignoring_polarization(&voxels);
-    
+
     // Should NOT match
-    assert_ne!(data.as_slice(), stolen.as_slice(), "Steganography failed: data leaked");
-    
+    assert_ne!(
+        data.as_slice(),
+        stolen.as_slice(),
+        "Steganography failed: data leaked"
+    );
+
     // Verify using the helper
     assert!(verify_obfuscation(data, &voxels));
 }

@@ -1,5 +1,5 @@
+use crate::codec::{decode_data, encode_data};
 use crate::structs::PhotonicVoxel;
-use crate::codec::{encode_data, decode_data};
 use rand::Rng;
 
 /// Result of a Bit Error Rate (BER) simulation run.
@@ -57,15 +57,18 @@ fn apply_noise(voxels: &[PhotonicVoxel], amplitude: f32) -> Vec<PhotonicVoxel> {
         return voxels.to_vec();
     }
     let mut rng = rand::rng();
-    voxels.iter().map(|v| {
-        let mut new_v = *v;
-        // Apply noise to all dimensions scaled by amplitude
-        new_v.intensity += rng.random_range(-amplitude..amplitude);
-        new_v.polarization += rng.random_range(-amplitude..amplitude);
-        new_v.phase += rng.random_range(-amplitude..amplitude);
-        new_v.wavelength += rng.random_range(-amplitude*100.0..amplitude*100.0); // Wavelength is larger magnitude
-        new_v
-    }).collect()
+    voxels
+        .iter()
+        .map(|v| {
+            let mut new_v = *v;
+            // Apply noise to all dimensions scaled by amplitude
+            new_v.intensity += rng.random_range(-amplitude..amplitude);
+            new_v.polarization += rng.random_range(-amplitude..amplitude);
+            new_v.phase += rng.random_range(-amplitude..amplitude);
+            new_v.wavelength += rng.random_range(-amplitude * 100.0..amplitude * 100.0); // Wavelength is larger magnitude
+            new_v
+        })
+        .collect()
 }
 
 /// Counts the number of differing bits between two byte arrays.

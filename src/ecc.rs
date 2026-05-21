@@ -71,11 +71,13 @@ pub fn recover_error_correction(data_with_parity: &[u8]) -> Result<Vec<u8>, Stri
     let shard_size = data_with_parity.len() / total_shards;
 
     // Reconstruct shards
-    let shards: Vec<Vec<u8>> = (0..total_shards).map(|i| {
-        let start = i * shard_size;
-        let end = start + shard_size;
-        data_with_parity[start..end].to_vec()
-    }).collect();
+    let shards: Vec<Vec<u8>> = (0..total_shards)
+        .map(|i| {
+            let start = i * shard_size;
+            let end = start + shard_size;
+            data_with_parity[start..end].to_vec()
+        })
+        .collect();
 
     let rs = ReedSolomon::new(data_shards, parity_shards).unwrap();
 

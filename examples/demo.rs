@@ -1,11 +1,14 @@
-use photon_core::{encode_data, decode_data, verify_obfuscation, read_ignoring_polarization};
+use photon_core::{decode_data, encode_data, read_ignoring_polarization, verify_obfuscation};
 
 fn main() {
     println!("=== 5D Optical Data Storage PoC ===");
 
     // 1. Prepare Data
     let original_message = "Hello, 5D World!".as_bytes();
-    println!("Original Data: {:?}", String::from_utf8_lossy(original_message));
+    println!(
+        "Original Data: {:?}",
+        String::from_utf8_lossy(original_message)
+    );
     println!("Hex: {:02X?}", original_message);
 
     // 2. Encode

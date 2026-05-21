@@ -1,6 +1,6 @@
 use crate::structs::PhotonicVoxel;
-use std::f32::consts::PI;
 use rand::Rng;
+use std::f32::consts::PI;
 
 // Constants for encoding
 const INTENSITY_LEVELS: usize = 4;
@@ -114,7 +114,7 @@ fn decode_voxel(voxel: PhotonicVoxel, noise: bool) -> u8 {
         let angle = (i as f32) * (PI / 4.0);
         let mut dist = (polarization - angle).abs();
         if dist > PI / 2.0 {
-             dist = PI - dist;
+            dist = PI - dist;
         }
 
         if dist < best_p_dist {

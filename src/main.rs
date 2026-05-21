@@ -1,8 +1,11 @@
 use clap::{Parser, Subcommand};
+use photon_core::{
+    add_error_correction, decode_data, encode_data, recover_error_correction, run_ber_simulation,
+    PhotonicVoxel,
+};
 use std::fs;
-use std::path::PathBuf;
 use std::io::Write;
-use photon_core::{encode_data, decode_data, add_error_correction, recover_error_correction, run_ber_simulation, PhotonicVoxel};
+use std::path::PathBuf;
 
 #[derive(Parser)]
 #[command(name = "photon_cli")]
@@ -51,7 +54,7 @@ enum Commands {
         /// Maximum noise level to test
         #[arg(long, default_value_t = 0.2)]
         max_noise: f32,
-    }
+    },
 }
 
 fn main() {
@@ -73,10 +76,16 @@ fn main() {
                 data
             };
 
-            println!("Encoding {} bytes (Density: 8 bits/voxel)...", data_to_encode.len());
+            println!(
+                "Encoding {} bytes (Density: 8 bits/voxel)...",
+                data_to_encode.len()
+            );
             let voxels = encode_data(&data_to_encode);
             println!("Generated {} voxels.", voxels.len());
 
+            // SAFETY: PhotonicVoxel is #[repr(C)] with 4 x f32 (16 bytes),
+            // no padding, so casting &[PhotonicVoxel] to &[u8] is valid.
+            // The Vec owns the data and is not modified during the slice lifetime.
             let voxel_bytes = unsafe {
                 std::slice::from_raw_parts(
                     voxels.as_ptr() as *const u8,
@@ -93,18 +102,28 @@ fn main() {
             fs::write(&output_path, voxel_bytes).expect("Failed to write output file");
             println!("Saved to {:?}", output_path);
         }
-        Commands::Decode { input, output, noise } => {
+        Commands::Decode {
+            input,
+            output,
+            noise,
+        } => {
             println!("Reading voxel file: {:?}", input);
             let raw_bytes = fs::read(input).expect("Failed to read voxel file");
 
             let struct_size = std::mem::size_of::<PhotonicVoxel>();
             if raw_bytes.len() % struct_size != 0 {
-                panic!("File size is not a multiple of Voxel size ({} bytes). Corrupt file?", struct_size);
+                panic!(
+                    "File size is not a multiple of Voxel size ({} bytes). Corrupt file?",
+                    struct_size
+                );
             }
 
             let count = raw_bytes.len() / struct_size;
             let mut voxels = Vec::with_capacity(count);
 
+            // SAFETY: raw_bytes is a Vec<u8> with guaranteed alignment to 4 bytes
+            // (Vec<u8> minimum alignment is 1, but we use read_unaligned for safety).
+            // PhotonicVoxel is #[repr(C)] packed as 4 x contiguous f32.
             unsafe {
                 let ptr = raw_bytes.as_ptr() as *const PhotonicVoxel;
                 for i in 0..count {
@@ -117,17 +136,17 @@ fn main() {
             let decoded_raw = decode_data(&voxels, *noise);
 
             let final_data = if decoded_raw.len().is_multiple_of(14) {
-                 println!("Auto-detect: Checking for ECC structure (14-byte blocks)...");
-                 match recover_error_correction(&decoded_raw) {
-                     Ok(corrected) => {
-                         println!("ECC Verification: SUCCESS. Parity stripped.");
-                         corrected
-                     },
-                     Err(_) => {
-                         println!("ECC Verification: Failed or not ECC data. Saving raw output.");
-                         decoded_raw
-                     }
-                 }
+                println!("Auto-detect: Checking for ECC structure (14-byte blocks)...");
+                match recover_error_correction(&decoded_raw) {
+                    Ok(corrected) => {
+                        println!("ECC Verification: SUCCESS. Parity stripped.");
+                        corrected
+                    }
+                    Err(_) => {
+                        println!("ECC Verification: Failed or not ECC data. Saving raw output.");
+                        decoded_raw
+                    }
+                }
             } else {
                 decoded_raw
             };
@@ -145,7 +164,12 @@ fn main() {
             writeln!(file, "NoiseLevel,BER,ErrorBits,TotalBits").unwrap();
 
             for res in &results {
-                writeln!(file, "{:.4},{:.6},{},{}", res.noise_level, res.ber, res.error_bits, res.total_bits).unwrap();
+                writeln!(
+                    file,
+                    "{:.4},{:.6},{},{}",
+                    res.noise_level, res.ber, res.error_bits, res.total_bits
+                )
+                .unwrap();
             }
 
             println!("Simulation complete. Results saved to {:?}", output);
@@ -159,7 +183,7 @@ fn main() {
             }
             println!("...   | ...");
             for res in results.iter().rev().take(3).rev() {
-                 println!("{:.3} | {:.5}", res.noise_level, res.ber);
+                println!("{:.3} | {:.5}", res.noise_level, res.ber);
             }
         }
     }
